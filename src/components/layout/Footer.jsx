@@ -1,18 +1,36 @@
+import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { useLogo } from '../../hooks/useLogo'
+import { settingsApi } from '../../services/api'
 
 function Footer() {
-  const { logoUrl } = useLogo()
+  const [docs, setDocs] = useState({ terminos: '', privacidad: '', devoluciones: '', faq: '' })
   const currentYear = new Date().getFullYear()
+
+  useEffect(() => {
+    let active = true
+    settingsApi.get('terminos_pdf_url').then((u) => active && setDocs((d) => ({ ...d, terminos: u }))).catch(() => {})
+    settingsApi.get('politica_privacidad_pdf_url').then((u) => active && setDocs((d) => ({ ...d, privacidad: u }))).catch(() => {})
+    settingsApi.get('politica_devoluciones_pdf_url').then((u) => active && setDocs((d) => ({ ...d, devoluciones: u }))).catch(() => {})
+    settingsApi.get('faq_pdf_url').then((u) => active && setDocs((d) => ({ ...d, faq: u }))).catch(() => {})
+    return () => { active = false }
+  }, [])
+
+  const renderDocLink = (label, url) =>
+    url
+      ? (
+        <a href={url} target="_blank" rel="noopener noreferrer" className="hover:text-accent-300 transition-colors">
+          {label}
+        </a>
+      )
+      : (
+        <span className="text-primary-300/60">{label}</span>
+      )
 
   return (
     <footer className="bg-primary-900 dark:bg-black text-white mt-auto">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           <div>
-            <div className="mb-4">
-              <img src={logoUrl} alt="Dematiq v2" className="h-10" />
-            </div>
             <p className="text-primary-200 text-sm">
               Partes PLC y automatización industrial. Calidad certificada para la industria.
             </p>
@@ -30,17 +48,16 @@ function Footer() {
             <h4 className="font-heading font-semibold mb-3 text-white uppercase tracking-wider text-sm">Soporte</h4>
             <ul className="space-y-2 text-sm text-primary-200">
               <li><a href="#" className="hover:text-accent-300 transition-colors">Contacto técnico</a></li>
-              <li><a href="#" className="hover:text-accent-300 transition-colors">Catálogo PDF</a></li>
-              <li><a href="#" className="hover:text-accent-300 transition-colors">Devoluciones</a></li>
-              <li><a href="#" className="hover:text-accent-300 transition-colors">FAQ</a></li>
+              <li>{renderDocLink('Devoluciones', docs.devoluciones)}</li>
+              <li>{renderDocLink('FAQ', docs.faq)}</li>
             </ul>
           </div>
 
           <div>
             <h4 className="font-heading font-semibold mb-3 text-white uppercase tracking-wider text-sm">Legal</h4>
             <ul className="space-y-2 text-sm text-primary-200">
-              <li><a href="#" className="hover:text-accent-300 transition-colors">Términos y condiciones</a></li>
-              <li><a href="#" className="hover:text-accent-300 transition-colors">Política de privacidad</a></li>
+              <li>{renderDocLink('Términos y condiciones', docs.terminos)}</li>
+              <li>{renderDocLink('Política de privacidad', docs.privacidad)}</li>
             </ul>
           </div>
         </div>

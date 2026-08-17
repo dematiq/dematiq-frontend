@@ -24,7 +24,7 @@ async function request(endpoint, options = {}) {
   return data;
 }
 
-export async function uploadImage(file) {
+export async function uploadFile(file, label = 'archivo') {
   const url = `${API_URL}/upload`;
   const formData = new FormData();
   formData.append('file', file);
@@ -36,8 +36,12 @@ export async function uploadImage(file) {
   });
 
   const data = await res.json();
-  if (!res.ok) throw new Error(data.error || 'Error al subir la imagen');
+  if (!res.ok) throw new Error(data.error || `Error al subir el ${label}`);
   return data.data.url;
+}
+
+export async function uploadImage(file) {
+  return uploadFile(file, 'imagen');
 }
 
 function mapProduct(p) {

@@ -270,8 +270,8 @@ function Products() {
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
         <div>
-          <h1 className="text-3xl md:text-4xl text-neutral-900 dark:text-white font-medium tracking-tight">Catálogo</h1>
-          <p className="text-neutral-400 dark:text-gray-500 text-sm mt-1">
+          <img src={logoUrl} alt="Dematiq" className="h-20 md:h-28" />
+          <p className="text-neutral-400 dark:text-gray-500 text-sm mt-2">
             {filtered.length} productos encontrados
             {selectedBrand && <span className="text-primary-500 dark:text-primary-300"> — {selectedBrand.name}</span>}
           </p>
@@ -296,10 +296,6 @@ function Products() {
               className="w-full pl-9 pr-4 py-2 text-sm border border-neutral-200 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-neutral-900/10 dark:focus:ring-white/10 focus:border-neutral-900 dark:focus:border-white transition-colors bg-transparent dark:text-gray-200"
             />
           </div>
-
-          <Link to="/" className="ml-4">
-            <img src={logoUrl} alt="Dematiq v2" className="h-14" />
-          </Link>
         </div>
       </div>
 

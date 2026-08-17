@@ -2,7 +2,6 @@ import { useState } from 'react'
 import { Outlet, Link, useLocation } from 'react-router-dom'
 import { useAuth } from '../../contexts/AuthContext'
 import ThemeToggle from '../ui/ThemeToggle'
-import { useLogo } from '../../hooks/useLogo'
 import {
   LayoutDashboard,
   Package,
@@ -29,15 +28,11 @@ const navLinks = [
 function Sidebar({ mobileOpen, onClose }) {
   const { user, logout } = useAuth()
   const location = useLocation()
-  const { logoUrl } = useLogo()
 
   const content = (
     <div className="flex flex-col h-full">
       <div className="px-7 pt-10 pb-7">
-        <Link to="/admin/dashboard" className="block">
-          <img src={logoUrl} alt="Dematiq v2" className="h-10" />
-        </Link>
-        <span className="block mt-1 text-neutral-500 text-xs uppercase tracking-widest">Panel de administración</span>
+        <span className="block text-neutral-500 text-xs uppercase tracking-widest">Panel de administración</span>
       </div>
 
       <div className="mx-5 border-t border-white/10" />
@@ -122,14 +117,10 @@ function Sidebar({ mobileOpen, onClose }) {
 
 function AdminLayout() {
   const [mobileOpen, setMobileOpen] = useState(false)
-  const { logoUrl } = useLogo()
 
   return (
     <div className="min-h-screen">
       <div className="md:hidden fixed top-0 left-0 right-0 h-14 bg-black dark:bg-gray-900 flex items-center justify-between px-4 z-30">
-        <Link to="/admin/dashboard">
-          <img src={logoUrl} alt="Dematiq v2" className="h-8" />
-        </Link>
         <div className="flex items-center gap-1">
           <ThemeToggle className="text-white/80 hover:text-white" />
           <button onClick={() => setMobileOpen(true)} className="p-2 text-white" aria-label="Abrir menú">
