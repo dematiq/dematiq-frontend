@@ -140,7 +140,7 @@ function Checkout() {
               </div>
               <div>
                 <label className="block text-sm font-medium text-neutral-700 mb-1">Código postal</label>
-                <input type="text" required value={form.zip} onChange={(e) => setForm({...form, zip: e.target.value})} className="w-full px-3 py-2.5 border border-neutral-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500" />
+                <input type="text" required maxLength={5} value={form.zip} onChange={(e) => setForm({...form, zip: e.target.value.replace(/\D/g, '').slice(0, 5)})} className="w-full px-3 py-2.5 border border-neutral-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500" />
               </div>
               <div className="md:col-span-2">
                 <label className="block text-sm font-medium text-neutral-700 mb-1">Notas del pedido</label>

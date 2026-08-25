@@ -55,8 +55,10 @@ function ProductForm() {
               name="price"
               required
               step="0.01"
+              min="0"
               value={form.price}
               onChange={handleChange}
+              onKeyDown={(e) => { if (e.key === '-' || e.key === 'e') e.preventDefault() }}
               className="w-full px-3 py-2.5 border border-neutral-200 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-black dark:focus:ring-white bg-transparent dark:text-gray-200"
             />
           </div>
@@ -68,8 +70,11 @@ function ProductForm() {
               type="number"
               name="stock"
               required
+              min="0"
+              step="1"
               value={form.stock}
               onChange={handleChange}
+              onKeyDown={(e) => { if (e.key === '-' || e.key === 'e') e.preventDefault() }}
               className="w-full px-3 py-2.5 border border-neutral-200 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-black dark:focus:ring-white bg-transparent dark:text-gray-200"
             />
           </div>

@@ -295,14 +295,14 @@ function ProductModal({ product, categories, brands, onClose, onSave }) {
                   <span className="text-sm font-medium text-neutral-700 dark:text-gray-300">Sin precio / Consultar precio</span>
                 </label>
                 <label className="block text-sm font-medium text-neutral-700 dark:text-gray-300 mb-1">Precio base (sin IVA)</label>
-                <input type="number" name="price" required={!form.price_on_request} step="0.01" min="0" value={form.price} disabled={form.price_on_request} onChange={(e) => setForm({ ...form, price: e.target.value })} className="w-full px-3 py-2.5 border border-neutral-200 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-black dark:focus:ring-white bg-transparent dark:text-gray-200 disabled:bg-neutral-100 dark:disabled:bg-gray-700 disabled:cursor-not-allowed" />
+                <input type="number" name="price" required={!form.price_on_request} step="0.01" min="0" value={form.price} disabled={form.price_on_request} onKeyDown={(e) => { if (e.key === '-' || e.key === 'e') e.preventDefault() }} onChange={(e) => setForm({ ...form, price: e.target.value })} className="w-full px-3 py-2.5 border border-neutral-200 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-black dark:focus:ring-white bg-transparent dark:text-gray-200 disabled:bg-neutral-100 dark:disabled:bg-gray-700 disabled:cursor-not-allowed" />
                 {!form.price_on_request && (
                   <p className="text-xs text-neutral-400 dark:text-gray-500 mt-1">Precio final con IVA: <span className="font-semibold text-black dark:text-white">${((parseFloat(form.price) || 0) * 1.16).toFixed(2)}</span></p>
                 )}
               </div>
               <div>
                 <label className="block text-sm font-medium text-neutral-700 dark:text-gray-300 mb-1">Stock</label>
-                <input type="number" name="stock" required min="0" value={form.stock} onChange={(e) => setForm({ ...form, stock: e.target.value })} className="w-full px-3 py-2.5 border border-neutral-200 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-black dark:focus:ring-white bg-transparent dark:text-gray-200" />
+                <input type="number" name="stock" required min="0" step="1" value={form.stock} onKeyDown={(e) => { if (e.key === '-' || e.key === 'e') e.preventDefault() }} onChange={(e) => setForm({ ...form, stock: e.target.value })} className="w-full px-3 py-2.5 border border-neutral-200 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-black dark:focus:ring-white bg-transparent dark:text-gray-200" />
               </div>
               <div className="col-span-2 grid grid-cols-3 gap-4 p-3 bg-neutral-50 dark:bg-gray-700 rounded-xl">
                 <div>
