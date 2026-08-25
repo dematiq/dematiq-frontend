@@ -39,6 +39,7 @@ function ProductModal({ product, categories, brands, onClose, onSave }) {
   const [step, setStep] = useState(0)
   const [pendingFile, setPendingFile] = useState(null)
   const [preview, setPreview] = useState(product?.image_url || '')
+  const [previewError, setPreviewError] = useState(false)
   const [previewOpen, setPreviewOpen] = useState(false)
   const [saving, setSaving] = useState(false)
   const fileInputRef = useRef(null)
@@ -53,6 +54,7 @@ function ProductModal({ product, categories, brands, onClose, onSave }) {
     const file = e.target.files?.[0]
     if (!file) return
     setPendingFile(file)
+    setPreviewError(false)
     setPreview(URL.createObjectURL(file))
   }
 
@@ -60,6 +62,7 @@ function ProductModal({ product, categories, brands, onClose, onSave }) {
     if (preview && !form.image_url) URL.revokeObjectURL(preview)
     setPendingFile(null)
     setPreview('')
+    setPreviewError(false)
     setForm((prev) => ({ ...prev, image_url: '' }))
     if (fileInputRef.current) fileInputRef.current.value = ''
   }
@@ -187,9 +190,24 @@ function ProductModal({ product, categories, brands, onClose, onSave }) {
                     </button>
                   )}
                 </div>
-                {preview && (
-                  <div className="mt-2 w-20 h-20 rounded-lg overflow-hidden border border-neutral-200 dark:border-gray-600 cursor-pointer" onClick={() => setPreviewOpen(true)}>
-                    <img src={preview} alt="" className="w-full h-full object-cover" />
+                {preview ? (
+                  <div className="mt-3 relative w-full h-48 rounded-lg overflow-hidden border border-neutral-200 dark:border-gray-600 cursor-pointer bg-neutral-100 dark:bg-gray-700" onClick={() => setPreviewOpen(true)}>
+                    {!previewError ? (
+                      <img src={preview} alt="Vista previa" onError={() => setPreviewError(true)} className="w-full h-full object-contain" />
+                    ) : (
+                      <div className="flex flex-col items-center justify-center h-full text-neutral-400 dark:text-gray-500 gap-2">
+                        <UploadIcon className="w-8 h-8" />
+                        <span className="text-sm">No se pudo cargar la vista previa</span>
+                      </div>
+                    )}
+                    <div className="absolute bottom-0 inset-x-0 bg-gradient-to-t from-black/60 to-transparent px-3 py-2">
+                      <span className="text-xs text-white font-medium truncate block">{pendingFile ? pendingFile.name : 'Imagen actual'}</span>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="mt-3 w-full h-48 rounded-lg border-2 border-dashed border-neutral-200 dark:border-gray-600 flex flex-col items-center justify-center gap-2 text-neutral-300 dark:text-gray-600">
+                    <UploadIcon className="w-10 h-10" />
+                    <span className="text-sm">Selecciona una imagen</span>
                   </div>
                 )}
                 {previewOpen && (
