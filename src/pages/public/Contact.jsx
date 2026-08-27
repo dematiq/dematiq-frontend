@@ -1,11 +1,27 @@
 import { useState } from 'react'
 import { Mail, Phone, MapPin, Building2, User, Send, CheckCircle } from 'lucide-react'
 import { quotationsApi } from '../../services/api'
+import { useSetting } from '../../hooks/useSetting'
+
+const DEFAULTS = {
+  address: 'Jardín de la Alabanza 2049\nJardines del Sol, Querétaro',
+  phone: '442 721 4891',
+  email: 'ventas@dematiq.com.mx',
+  rfc: 'DAU250421V80',
+  hoursWeek: '9:00 - 18:00',
+  hoursSat: '9:00 - 14:00',
+}
 
 function Contact() {
   const [sent, setSent] = useState(false)
   const [error, setError] = useState('')
   const [submitting, setSubmitting] = useState(false)
+  const { value: address } = useSetting('contact_address', DEFAULTS.address)
+  const { value: phone } = useSetting('contact_phone', DEFAULTS.phone)
+  const { value: email } = useSetting('contact_email', DEFAULTS.email)
+  const { value: rfc } = useSetting('contact_rfc', DEFAULTS.rfc)
+  const { value: hoursWeek } = useSetting('contact_hours_week', DEFAULTS.hoursWeek)
+  const { value: hoursSat } = useSetting('contact_hours_saturday', DEFAULTS.hoursSat)
   const [form, setForm] = useState({
     nombre: '',
     empresa: '',
@@ -177,7 +193,11 @@ function Contact() {
                     <MapPin className="w-5 h-5 text-black dark:text-white mt-0.5 flex-shrink-0" />
                     <div>
                       <p className="text-sm font-medium text-black dark:text-white">Dirección</p>
-                      <p className="text-sm text-neutral-500 dark:text-gray-400">Jardín de la Alabanza 2049<br />Jardines del Sol, Querétaro</p>
+                      <p className="text-sm text-neutral-500 dark:text-gray-400">
+                        {address.split('\n').map((line, i) => (
+                          <span key={i}>{line}{i < address.split('\n').length - 1 && <br />}</span>
+                        ))}
+                      </p>
                     </div>
                   </div>
 
@@ -185,7 +205,7 @@ function Contact() {
                     <Phone className="w-5 h-5 text-black dark:text-white mt-0.5 flex-shrink-0" />
                     <div>
                       <p className="text-sm font-medium text-black dark:text-white">Teléfono</p>
-                      <p className="text-sm text-neutral-500 dark:text-gray-400">442 721 4891</p>
+                      <p className="text-sm text-neutral-500 dark:text-gray-400">{phone}</p>
                     </div>
                   </div>
 
@@ -193,7 +213,7 @@ function Contact() {
                     <Mail className="w-5 h-5 text-black dark:text-white mt-0.5 flex-shrink-0" />
                     <div>
                       <p className="text-sm font-medium text-black dark:text-white">Correo</p>
-                      <p className="text-sm text-neutral-500 dark:text-gray-400">ventas@dematiq.com.mx</p>
+                      <p className="text-sm text-neutral-500 dark:text-gray-400">{email}</p>
                     </div>
                   </div>
 
@@ -201,7 +221,7 @@ function Contact() {
                     <Building2 className="w-5 h-5 text-black dark:text-white mt-0.5 flex-shrink-0" />
                     <div>
                       <p className="text-sm font-medium text-black dark:text-white">RFC</p>
-                      <p className="text-sm text-neutral-500 dark:text-gray-400">DAU250421V80</p>
+                      <p className="text-sm text-neutral-500 dark:text-gray-400">{rfc}</p>
                     </div>
                   </div>
                 </div>
@@ -212,11 +232,11 @@ function Contact() {
                 <div className="space-y-2 text-sm">
                   <div className="flex justify-between">
                     <span className="text-neutral-500 dark:text-gray-400">Lun - Vie</span>
-                    <span className="font-medium text-black dark:text-white">9:00 - 18:00</span>
+                    <span className="font-medium text-black dark:text-white">{hoursWeek}</span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-neutral-500 dark:text-gray-400">Sábado</span>
-                    <span className="font-medium text-black dark:text-white">9:00 - 14:00</span>
+                    <span className="font-medium text-black dark:text-white">{hoursSat}</span>
                   </div>
                 </div>
               </div>

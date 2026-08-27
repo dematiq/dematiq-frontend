@@ -1,10 +1,98 @@
 import { useState, useEffect, useRef } from 'react'
 import { settingsApi, uploadImage, uploadFile } from '../../services/api'
 import { useToast } from '../../contexts/ToastContext'
-import { Save, Upload, FileText, FileDown, Trash2, Store, ShoppingCart } from 'lucide-react'
+import { Save, Upload, FileText, FileDown, Trash2, Store, ShoppingCart, MapPin } from 'lucide-react'
 import { useSetting } from '../../hooks/useSetting'
 
 const DEFAULT_TAGLINE = 'Partes PLC y automatización industrial. Calidad certificada para la industria.'
+
+const CONTACT_DEFAULTS = {
+  address: 'Jardín de la Alabanza 2049\nJardines del Sol, Querétaro',
+  phone: '442 721 4891',
+  email: 'ventas@dematiq.com.mx',
+  rfc: 'DAU250421V80',
+  hoursWeek: '9:00 - 18:00',
+  hoursSat: '9:00 - 14:00',
+}
+
+const CONTACT_FIELDS = [
+  { key: 'contact_address', label: 'Dirección (usa Enter para nueva línea)', defaultValue: CONTACT_DEFAULTS.address, textarea: true },
+  { key: 'contact_phone', label: 'Teléfono', defaultValue: CONTACT_DEFAULTS.phone },
+  { key: 'contact_email', label: 'Correo', defaultValue: CONTACT_DEFAULTS.email },
+  { key: 'contact_rfc', label: 'RFC', defaultValue: CONTACT_DEFAULTS.rfc },
+  { key: 'contact_hours_week', label: 'Horario Lun - Vie', defaultValue: CONTACT_DEFAULTS.hoursWeek },
+  { key: 'contact_hours_saturday', label: 'Horario Sábado', defaultValue: CONTACT_DEFAULTS.hoursSat },
+]
+
+function ContactInfoCard() {
+  const toast = useToast()
+  const [values, setValues] = useState(() => Object.fromEntries(CONTACT_FIELDS.map((f) => [f.key, ''])))
+  const [loaded, setLoaded] = useState(false)
+  const [saving, setSaving] = useState(false)
+
+  useEffect(() => {
+    let active = true
+    Promise.all(
+      CONTACT_FIELDS.map((f) =>
+        settingsApi.get(f.key)
+          .then((val) => [f.key, val || f.defaultValue])
+          .catch(() => [f.key, f.defaultValue])
+      )
+    ).then((pairs) => {
+      if (!active) return
+      setValues(Object.fromEntries(pairs))
+      setLoaded(true)
+    })
+    return () => { active = false }
+  }, [])
+
+  const handleSave = async () => {
+    setSaving(true)
+    try {
+      for (const f of CONTACT_FIELDS) {
+        await settingsApi.update(f.key, values[f.key])
+      }
+      toast.success('Información de contacto guardada correctamente')
+    } catch (err) {
+      toast.error(err.message)
+    } finally {
+      setSaving(false)
+    }
+  }
+
+  return (
+    <div className="space-y-4">
+      {CONTACT_FIELDS.map((f) => (
+        <div key={f.key}>
+          <label className="block text-sm font-medium text-neutral-900 dark:text-white mb-1.5">{f.label}</label>
+          {f.textarea ? (
+            <textarea
+              rows={2}
+              value={loaded ? values[f.key] : ''}
+              onChange={(e) => setValues({ ...values, [f.key]: e.target.value })}
+              className="w-full px-3 py-2.5 border border-neutral-200 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 resize-y bg-transparent text-neutral-900 dark:text-white"
+            />
+          ) : (
+            <input
+              type="text"
+              value={loaded ? values[f.key] : ''}
+              onChange={(e) => setValues({ ...values, [f.key]: e.target.value })}
+              className="w-full px-3 py-2.5 border border-neutral-200 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 bg-transparent text-neutral-900 dark:text-white"
+            />
+          )}
+        </div>
+      ))}
+      <button
+        onClick={handleSave}
+        disabled={saving || !loaded}
+        className="flex items-center gap-2 px-5 py-2 bg-primary-500 text-white rounded-lg text-sm font-semibold hover:bg-primary-600 transition-colors disabled:bg-neutral-300 dark:disabled:bg-gray-600"
+      >
+        <Save className="w-4 h-4" />
+        {saving ? 'Guardando...' : 'Guardar cambios'}
+      </button>
+    </div>
+  )
+}
 
 function SectionCard({ icon: Icon, title, description, children, className = '' }) {
   return (
@@ -349,6 +437,14 @@ function Settings() {
           <Save className="w-4 h-4" />
           {notesLoading ? 'Guardando...' : 'Guardar notas'}
         </button>
+      </SectionCard>
+
+      <SectionCard
+        icon={MapPin}
+        title="Información de contacto"
+        description="Estos datos se muestran en la página de contacto. La dirección puede tener varias líneas con Enter."
+      >
+        <ContactInfoCard />
       </SectionCard>
 
       <SectionCard
