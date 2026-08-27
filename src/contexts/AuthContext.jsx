@@ -61,8 +61,46 @@ export function AuthProvider({ children }) {
       if (!res.ok) {
         return { success: false, error: data.error || 'Error al registrarse' }
       }
-      localStorage.setItem(TOKEN_KEY, data.data.token)
-      setUser(data.data.user)
+      // Registro exitoso pero pendiente verificación - NO guardar token
+      // El usuario debe verificar su email primero
+      return { success: true, data: data.data }
+    } catch {
+      return { success: false, error: 'Error de conexión con el servidor' }
+    }
+  }, [])
+
+  const verifyEmail = useCallback(async ({ email, code }) => {
+    try {
+      const res = await fetch(`${API_URL}/auth/verify-email`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, code }),
+      })
+      const data = await res.json()
+      if (!res.ok) {
+        return { success: false, error: data.error || 'Código inválido o expirado' }
+      }
+      if (data.data?.token) {
+        localStorage.setItem(TOKEN_KEY, data.data.token)
+        setUser(data.data.user)
+      }
+      return { success: true, user: data.data?.user }
+    } catch {
+      return { success: false, error: 'Error de conexión con el servidor' }
+    }
+  }, [])
+
+  const resendVerificationCode = useCallback(async (email) => {
+    try {
+      const res = await fetch(`${API_URL}/auth/resend-verification`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email }),
+      })
+      const data = await res.json()
+      if (!res.ok) {
+        return { success: false, error: data.error || 'Error al reenviar código' }
+      }
       return { success: true }
     } catch {
       return { success: false, error: 'Error de conexión con el servidor' }
@@ -110,7 +148,7 @@ export function AuthProvider({ children }) {
   }, [])
 
   return (
-    <AuthContext.Provider value={{ user, loading, login, register, updateProfile, changePassword, logout }}>
+    <AuthContext.Provider value={{ user, loading, login, register, verifyEmail, resendVerificationCode, updateProfile, changePassword, logout }}>
       {children}
     </AuthContext.Provider>
   )

@@ -27,7 +27,8 @@ function Register() {
     const result = await register({ name: form.name, email: form.email, password: form.password })
     setLoading(false)
     if (result.success) {
-      navigate('/')
+      // Redirigir a verificación de email
+      navigate('/verificar-email', { state: { email: form.email } })
     } else {
       toast.error(result.error)
     }

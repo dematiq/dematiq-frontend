@@ -9,6 +9,7 @@ import Quote from '../pages/public/Quote'
 import Checkout from '../pages/public/Checkout'
 import Login from '../pages/public/Login'
 import Register from '../pages/public/Register'
+import VerifyEmail from '../pages/public/VerifyEmail'
 import Contact from '../pages/public/Contact'
 import Profile from '../pages/public/Profile'
 import PaymentSuccess from '../pages/public/PaymentSuccess'
@@ -35,6 +36,7 @@ function AppRouter() {
         <Route path="/checkout" element={<Checkout />} />
         <Route path="/iniciar-sesion" element={<Login />} />
         <Route path="/registrarse" element={<Register />} />
+        <Route path="/verificar-email" element={<VerifyEmail />} />
         <Route path="/contacto" element={<Contact />} />
         <Route path="/marcas" element={<Brands />} />
         <Route path="/perfil" element={<Profile />} />
