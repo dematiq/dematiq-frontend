@@ -2,6 +2,9 @@ import { useState, useEffect, useRef } from 'react'
 import { settingsApi, uploadImage, uploadFile } from '../../services/api'
 import { useToast } from '../../contexts/ToastContext'
 import { Save, Upload, FileText, FileDown, Trash2, Store, ShoppingCart } from 'lucide-react'
+import { useSetting } from '../../hooks/useSetting'
+
+const DEFAULT_TAGLINE = 'Partes PLC y automatización industrial. Calidad certificada para la industria.'
 
 function SectionCard({ icon: Icon, title, description, children, className = '' }) {
   return (
@@ -180,6 +183,8 @@ function Settings() {
   const [loading, setLoading] = useState(false)
   const [notes, setNotes] = useState('')
   const [notesLoading, setNotesLoading] = useState(false)
+  const { value: tagline, setValue: setTagline, loaded: taglineLoaded } = useSetting('tagline_text', DEFAULT_TAGLINE)
+  const [taglineSaving, setTaglineSaving] = useState(false)
 
   useEffect(() => {
     loadLogo()
@@ -243,6 +248,18 @@ function Settings() {
     }
   }
 
+  const handleSaveTagline = async () => {
+    setTaglineSaving(true)
+    try {
+      await settingsApi.update('tagline_text', tagline)
+      toast.success('Mensaje guardado correctamente')
+    } catch (err) {
+      toast.error(err.message)
+    } finally {
+      setTaglineSaving(false)
+    }
+  }
+
   return (
     <div className="max-w-5xl">
       <h1 className="text-2xl font-bold text-neutral-900 dark:text-white mb-6">Configuración</h1>
@@ -289,6 +306,27 @@ function Settings() {
           onChange={handleFileSelect}
           className="hidden"
         />
+
+        <div className="border-t border-neutral-200 dark:border-gray-700 mt-6 pt-6">
+          <label className="block text-sm font-medium text-neutral-900 dark:text-white mb-1.5">Mensaje de la tienda</label>
+          <p className="text-xs text-neutral-500 mb-3">Este texto se muestra en el footer y en la página de registro.</p>
+          <input
+            type="text"
+            value={taglineLoaded ? tagline : ''}
+            onChange={(e) => setTagline(e.target.value)}
+            maxLength={120}
+            className="w-full px-3 py-2.5 border border-neutral-200 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 bg-transparent text-neutral-900 dark:text-white mb-3"
+            placeholder={DEFAULT_TAGLINE}
+          />
+          <button
+            onClick={handleSaveTagline}
+            disabled={taglineSaving}
+            className="flex items-center gap-2 px-5 py-2 bg-primary-500 text-white rounded-lg text-sm font-semibold hover:bg-primary-600 transition-colors disabled:bg-neutral-300 dark:disabled:bg-gray-600"
+          >
+            <Save className="w-4 h-4" />
+            {taglineSaving ? 'Guardando...' : 'Guardar mensaje'}
+          </button>
+        </div>
       </SectionCard>
 
       <SectionCard

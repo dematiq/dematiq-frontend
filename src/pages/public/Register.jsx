@@ -2,12 +2,16 @@ import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '../../contexts/AuthContext'
 import { useToast } from '../../contexts/ToastContext'
+import { useSetting } from '../../hooks/useSetting'
 import registerImg from '../../assets/img/dematiq_register.png'
+
+const DEFAULT_TAGLINE = 'Partes PLC y automatización industrial. Calidad certificada para la industria.'
 
 function Register() {
   const navigate = useNavigate()
   const toast = useToast()
   const { register } = useAuth()
+  const { value: tagline } = useSetting('tagline_text', DEFAULT_TAGLINE)
   const [form, setForm] = useState({ name: '', email: '', password: '', confirmPassword: '' })
   const [loading, setLoading] = useState(false)
 
@@ -124,7 +128,7 @@ function Register() {
               Dematiq v2
             </h2>
             <p className="text-white/70 text-sm mt-1">
-              Partes PLC y automatización industrial. Calidad certificada para la industria.
+              {tagline}
             </p>
           </div>
         </div>

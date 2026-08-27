@@ -138,7 +138,7 @@ function Header() {
 
       <div className="bg-primary-400 dark:bg-primary-600">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2">
-          <p className="text-white text-center text-xs sm:text-sm font-heading font-semibold uppercase tracking-widest">
+          <p className="text-white text-center text-base sm:text-lg lg:text-xl font-heading font-bold uppercase tracking-widest">
             Equipos de automatización y control eléctrico
           </p>
         </div>

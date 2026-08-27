@@ -1,9 +1,13 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { settingsApi } from '../../services/api'
+import { useSetting } from '../../hooks/useSetting'
+
+const DEFAULT_TAGLINE = 'Partes PLC y automatización industrial. Calidad certificada para la industria.'
 
 function Footer() {
   const [docs, setDocs] = useState({ terminos: '', privacidad: '', devoluciones: '', faq: '' })
+  const { value: tagline } = useSetting('tagline_text', DEFAULT_TAGLINE)
   const currentYear = new Date().getFullYear()
 
   useEffect(() => {
@@ -32,7 +36,7 @@ function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           <div>
             <p className="text-primary-200 text-sm">
-              Partes PLC y automatización industrial. Calidad certificada para la industria.
+              {tagline}
             </p>
           </div>
 
