@@ -398,7 +398,7 @@ function Products() {
                         </>
                       )}
                     </div>
-                    <h3 className="text-sm font-semibold text-neutral-800 dark:text-gray-200 leading-snug mb-2 group-hover:text-neutral-900 dark:group-hover:text-white transition-colors">
+                    <h3 className="text-sm font-semibold text-neutral-800 dark:text-gray-200 leading-snug mb-2 group-hover:text-neutral-900 dark:group-hover:text-white transition-colors line-clamp-3">
                       {product.name}
                     </h3>
                     {product.price_on_request ? (
