@@ -51,7 +51,7 @@ function Footer() {
           <div>
             <h4 className="font-heading font-semibold mb-3 text-white uppercase tracking-wider text-sm">Soporte</h4>
             <ul className="space-y-2 text-sm text-primary-200">
-              <li><a href="#" className="hover:text-accent-300 transition-colors">Contacto técnico</a></li>
+              <li><Link to="/contacto" className="hover:text-accent-300 transition-colors">Contacto técnico</Link></li>
               <li>{renderDocLink('Devoluciones', docs.devoluciones)}</li>
               <li>{renderDocLink('FAQ', docs.faq)}</li>
             </ul>
