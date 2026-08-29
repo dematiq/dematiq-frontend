@@ -1,8 +1,9 @@
 import { useState, useEffect, useRef } from 'react'
-import { Plus, X, Search, ExternalLink, Upload as UploadIcon, Trash2, ToggleLeft, ToggleRight } from 'lucide-react'
+import { Plus, X, Search, ExternalLink, Upload as UploadIcon, Trash2, ToggleLeft, ToggleRight, AlertCircle } from 'lucide-react'
 import { brandsApi, uploadImage } from '../../services/api'
 import { useToast } from '../../contexts/ToastContext'
 import ConfirmModal from '../../components/ui/ConfirmModal'
+import { useImageValidator } from '../../hooks/useImageValidator'
 
 const statusLabels = { active: 'Activo', inactive: 'Inactivo' }
 
@@ -21,10 +22,15 @@ function BrandModal({ brand, onClose, onSave }) {
   const [previewOpen, setPreviewOpen] = useState(false)
   const [saving, setSaving] = useState(false)
   const fileInputRef = useRef(null)
+  const { validateAndResize } = useImageValidator()
 
   const handleFileSelect = (e) => {
     const file = e.target.files?.[0]
     if (!file) return
+    if (!['image/jpeg', 'image/png', 'image/webp'].includes(file.type)) {
+      toast.error('Formato no válido. Usa JPG, PNG o WebP.')
+      return
+    }
     setPendingFile(file)
     setPreview(URL.createObjectURL(file))
   }
@@ -47,7 +53,13 @@ function BrandModal({ brand, onClose, onSave }) {
     try {
       let logoUrl = form.logo_url
       if (pendingFile) {
-        logoUrl = await uploadImage(pendingFile)
+        const result = await validateAndResize(pendingFile, {
+          maxWidth: 400,
+          maxHeight: 400,
+          maxSizeKB: 200,
+          quality: 0.85,
+        })
+        logoUrl = await uploadImage(result.file)
       }
       if (preview && !form.logo_url) URL.revokeObjectURL(preview)
 

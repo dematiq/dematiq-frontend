@@ -1,8 +1,9 @@
 import { useState, useEffect, useRef } from 'react'
 import { settingsApi, uploadImage, uploadFile } from '../../services/api'
 import { useToast } from '../../contexts/ToastContext'
-import { Save, Upload, FileText, FileDown, Trash2, Store, ShoppingCart, MapPin } from 'lucide-react'
+import { Save, Upload, FileText, FileDown, Trash2, Store, ShoppingCart, MapPin, AlertCircle } from 'lucide-react'
 import { useSetting } from '../../hooks/useSetting'
+import { useImageValidator } from '../../hooks/useImageValidator'
 import { DEFAULT_ANNOUNCEMENT } from '../../components/layout/Header'
 
 const DEFAULT_TAGLINE = 'Partes PLC y automatización industrial. Calidad certificada para la industria.'
@@ -277,6 +278,7 @@ function Settings() {
   const [announcementSaving, setAnnouncementSaving] = useState(false)
   const { value: announcement, loaded: announcementLoaded } = useSetting('announcement_text', DEFAULT_ANNOUNCEMENT)
   const [announcementInput, setAnnouncementInput] = useState('')
+  const { validateAndResize } = useImageValidator()
 
   useEffect(() => {
     if (announcementLoaded) setAnnouncementInput(announcement)
@@ -309,6 +311,11 @@ function Settings() {
   const handleFileSelect = (e) => {
     const file = e.target.files?.[0]
     if (!file) return
+    // Validar tipo básico antes de preview
+    if (!['image/jpeg', 'image/png', 'image/webp'].includes(file.type)) {
+      toast.error('Formato no válido. Usa JPG, PNG o WebP.')
+      return
+    }
     setSelectedFile(file)
     setPreview(URL.createObjectURL(file))
   }
@@ -320,11 +327,18 @@ function Settings() {
     }
     setLoading(true)
     try {
-      const url = await uploadImage(selectedFile)
+      // Validar y redimensionar antes de subir
+      const result = await validateAndResize(selectedFile, {
+        maxWidth: 600,
+        maxHeight: 300,
+        maxSizeKB: 300,
+        quality: 0.85,
+      })
+      const url = await uploadImage(result.file)
       await settingsApi.update('logo_url', url)
       setLogoUrl(url)
       setSelectedFile(null)
-      toast.success('Logo actualizado correctamente')
+      toast.success('Logo actualizado correctamente (redimensionado a ' + result.width + 'x' + result.height + ')')
     } catch (err) {
       toast.error(err.message)
     } finally {
