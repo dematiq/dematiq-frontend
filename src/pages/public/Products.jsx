@@ -355,7 +355,7 @@ function Products() {
 
         <div className="flex-1 min-w-0">
           {loading ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
               {[...Array(8)].map((_, i) => (
                 <div key={i} className="bg-neutral-50 dark:bg-gray-800 rounded-xl overflow-hidden animate-pulse">
                   <div className="h-48 bg-neutral-200 dark:bg-gray-700" />
@@ -369,7 +369,7 @@ function Products() {
               ))}
             </div>
           ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
               {filtered.map((product) => (
                 <Link
                   key={product.id}
