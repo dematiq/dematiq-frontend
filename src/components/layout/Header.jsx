@@ -7,8 +7,6 @@ import { ShoppingCart, Menu, X, ClipboardList, User } from 'lucide-react'
 import ThemeToggle from '../ui/ThemeToggle'
 import { useSetting } from '../../hooks/useSetting'
 
-const DEFAULT_ANNOUNCEMENT = 'Equipos de automatización y control eléctrico'
-
 const navLinks = [
   { path: '/', label: 'Catálogo' },
   { path: '/marcas', label: 'Marcas' },
@@ -22,7 +20,7 @@ function Header() {
   const { totalItems: quoteItems } = useQuote()
   const [mobileOpen, setMobileOpen] = useState(false)
   const location = useLocation()
-  const { value: announcement } = useSetting('announcement_text', DEFAULT_ANNOUNCEMENT)
+  const { value: announcement } = useSetting('announcement_text', 'Equipos de automatización y control eléctrico')
   const isActive = (path) => {
     if (path === '/') return location.pathname === '/' || location.pathname.startsWith('/productos')
     return location.pathname.startsWith(path)
