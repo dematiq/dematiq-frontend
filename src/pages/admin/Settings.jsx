@@ -274,7 +274,7 @@ function Settings() {
   const { value: tagline, setValue: setTagline, loaded: taglineLoaded } = useSetting('tagline_text', DEFAULT_TAGLINE)
   const [taglineSaving, setTaglineSaving] = useState(false)
   const [announcementSaving, setAnnouncementSaving] = useState(false)
-  const { value: announcement, loaded: announcementLoaded } = useSetting('announcement_text', DEFAULT_ANNOUNCEMENT)
+  const { value: announcement, loaded: announcementLoaded } = useSetting('announcement_text', 'Equipos de automatización y control eléctrico')
   const [announcementInput, setAnnouncementInput] = useState('')
 
   useEffect(() => {
@@ -444,7 +444,7 @@ function Settings() {
             onChange={(e) => setAnnouncementInput(e.target.value)}
             maxLength={120}
             className="w-full px-3 py-2.5 border border-neutral-200 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 bg-transparent text-neutral-900 dark:text-white mb-3"
-            placeholder={DEFAULT_ANNOUNCEMENT}
+            placeholder="Equipos de automatización y control eléctrico"
           />
           <button
             onClick={handleSaveAnnouncement}
