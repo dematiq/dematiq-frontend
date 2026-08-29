@@ -3,6 +3,7 @@ import { settingsApi, uploadImage, uploadFile } from '../../services/api'
 import { useToast } from '../../contexts/ToastContext'
 import { Save, Upload, FileText, FileDown, Trash2, Store, ShoppingCart, MapPin } from 'lucide-react'
 import { useSetting } from '../../hooks/useSetting'
+import { DEFAULT_ANNOUNCEMENT } from '../../components/layout/Header'
 
 const DEFAULT_TAGLINE = 'Partes PLC y automatización industrial. Calidad certificada para la industria.'
 
@@ -274,7 +275,7 @@ function Settings() {
   const { value: tagline, setValue: setTagline, loaded: taglineLoaded } = useSetting('tagline_text', DEFAULT_TAGLINE)
   const [taglineSaving, setTaglineSaving] = useState(false)
   const [announcementSaving, setAnnouncementSaving] = useState(false)
-  const { value: announcement, loaded: announcementLoaded } = useSetting('announcement_text', 'Equipos de automatización y control eléctrico')
+  const { value: announcement, loaded: announcementLoaded } = useSetting('announcement_text', DEFAULT_ANNOUNCEMENT)
   const [announcementInput, setAnnouncementInput] = useState('')
 
   useEffect(() => {
@@ -444,7 +445,7 @@ function Settings() {
             onChange={(e) => setAnnouncementInput(e.target.value)}
             maxLength={120}
             className="w-full px-3 py-2.5 border border-neutral-200 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 bg-transparent text-neutral-900 dark:text-white mb-3"
-            placeholder="Equipos de automatización y control eléctrico"
+            placeholder={DEFAULT_ANNOUNCEMENT}
           />
           <button
             onClick={handleSaveAnnouncement}
