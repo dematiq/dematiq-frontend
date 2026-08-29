@@ -273,6 +273,13 @@ function Settings() {
   const [notesLoading, setNotesLoading] = useState(false)
   const { value: tagline, setValue: setTagline, loaded: taglineLoaded } = useSetting('tagline_text', DEFAULT_TAGLINE)
   const [taglineSaving, setTaglineSaving] = useState(false)
+  const [announcementSaving, setAnnouncementSaving] = useState(false)
+  const { value: announcement, loaded: announcementLoaded } = useSetting('announcement_text', DEFAULT_ANNOUNCEMENT)
+  const [announcementInput, setAnnouncementInput] = useState('')
+
+  useEffect(() => {
+    if (announcementLoaded) setAnnouncementInput(announcement)
+  }, [announcementLoaded, announcement])
 
   useEffect(() => {
     loadLogo()
@@ -348,6 +355,18 @@ function Settings() {
     }
   }
 
+  const handleSaveAnnouncement = async () => {
+    setAnnouncementSaving(true)
+    try {
+      await settingsApi.update('announcement_text', announcementInput)
+      toast.success('Anuncio guardado correctamente')
+    } catch (err) {
+      toast.error(err.message)
+    } finally {
+      setAnnouncementSaving(false)
+    }
+  }
+
   return (
     <div className="max-w-5xl">
       <h1 className="text-2xl font-bold text-neutral-900 dark:text-white mb-6">Configuración</h1>
@@ -413,6 +432,27 @@ function Settings() {
           >
             <Save className="w-4 h-4" />
             {taglineSaving ? 'Guardando...' : 'Guardar mensaje'}
+          </button>
+        </div>
+
+        <div className="border-t border-neutral-200 dark:border-gray-700 mt-6 pt-6">
+          <label className="block text-sm font-medium text-neutral-900 dark:text-white mb-1.5">Anuncio superior (barra azul)</label>
+          <p className="text-xs text-neutral-500 mb-3">Texto que aparece en la barra de anuncio debajo del menú principal.</p>
+          <input
+            type="text"
+            value={announcementInput}
+            onChange={(e) => setAnnouncementInput(e.target.value)}
+            maxLength={120}
+            className="w-full px-3 py-2.5 border border-neutral-200 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 bg-transparent text-neutral-900 dark:text-white mb-3"
+            placeholder={DEFAULT_ANNOUNCEMENT}
+          />
+          <button
+            onClick={handleSaveAnnouncement}
+            disabled={announcementSaving}
+            className="flex items-center gap-2 px-5 py-2 bg-primary-500 text-white rounded-lg text-sm font-semibold hover:bg-primary-600 transition-colors disabled:bg-neutral-300 dark:disabled:bg-gray-600"
+          >
+            <Save className="w-4 h-4" />
+            {announcementSaving ? 'Guardando...' : 'Guardar anuncio'}
           </button>
         </div>
       </SectionCard>
