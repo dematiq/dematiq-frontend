@@ -267,7 +267,7 @@ function Products() {
   })
 
   return (
-    <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-6 py-6">
+    <div className="max-w-7xl mx-auto px-2 sm:px-3 lg:px-5 py-6">
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
         <div>
           <img src={logoUrl} alt="Dematiq" className="h-20 md:h-28" />
@@ -314,7 +314,7 @@ function Products() {
       )}
 
       <div className="flex gap-6">
-        <div className="hidden md:block w-52 flex-shrink-0">
+        <div className="hidden md:block w-56 flex-shrink-0">
           <div className="sticky top-24">
             <CategorySidebar
               selectedCategory={selectedCategory}
