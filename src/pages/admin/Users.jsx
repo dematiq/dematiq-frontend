@@ -3,6 +3,7 @@ import { X, ToggleLeft, ToggleRight, Lock } from 'lucide-react'
 import { usersApi, authApi } from '../../services/api'
 import { useToast } from '../../contexts/ToastContext'
 import ConfirmModal from '../../components/ui/ConfirmModal'
+import PasswordInput from '../../components/ui/PasswordInput'
 
 function UserModal({ user, onClose, onSave }) {
   const toast = useToast()
@@ -234,9 +235,8 @@ function Users() {
                   Tu contraseña
                 </span>
               </label>
-              <input
+              <PasswordInput
                 id="confirm-password"
-                type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="Ingresa tu contraseña para confirmar"

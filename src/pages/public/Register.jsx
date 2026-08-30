@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '../../contexts/AuthContext'
 import { useToast } from '../../contexts/ToastContext'
 import { useSetting } from '../../hooks/useSetting'
+import PasswordInput from '../../components/ui/PasswordInput'
 import registerImg from '../../assets/img/dematiq_register.png'
 
 const DEFAULT_TAGLINE = 'Partes PLC y automatización industrial. Calidad certificada para la industria.'
@@ -77,8 +78,7 @@ function Register() {
               <label className="block text-sm font-medium text-neutral-700 mb-1.5">
                 Contraseña
               </label>
-              <input
-                type="password"
+              <PasswordInput
                 required
                 value={form.password}
                 onChange={(e) => setForm({ ...form, password: e.target.value })}
@@ -90,8 +90,7 @@ function Register() {
               <label className="block text-sm font-medium text-neutral-700 mb-1.5">
                 Confirmar contraseña
               </label>
-              <input
-                type="password"
+              <PasswordInput
                 required
                 value={form.confirmPassword}
                 onChange={(e) => setForm({ ...form, confirmPassword: e.target.value })}
