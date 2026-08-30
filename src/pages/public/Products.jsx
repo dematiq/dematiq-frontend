@@ -267,7 +267,7 @@ function Products() {
   })
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-6 py-6">
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
         <div>
           <img src={logoUrl} alt="Dematiq" className="h-20 md:h-28" />
@@ -313,8 +313,8 @@ function Products() {
         />
       )}
 
-      <div className="flex gap-5">
-        <div className="hidden md:block w-48 flex-shrink-0">
+      <div className="flex gap-6">
+        <div className="hidden md:block w-52 flex-shrink-0">
           <div className="sticky top-24">
             <CategorySidebar
               selectedCategory={selectedCategory}
@@ -329,7 +329,7 @@ function Products() {
         {showSidebar && (
           <div className="fixed inset-0 z-50 md:hidden">
             <div className="fixed inset-0 bg-black/50 dark:bg-black/70" onClick={() => setShowSidebar(false)} />
-            <div className="fixed inset-y-0 left-0 w-56 bg-white dark:bg-gray-800 shadow-2xl flex flex-col">
+            <div className="fixed inset-y-0 left-0 w-52 bg-white dark:bg-gray-800 shadow-2xl flex flex-col">
               <div className="flex items-center justify-between px-5 py-4 border-b border-neutral-100 dark:border-gray-700 flex-shrink-0">
                 <h2 className="font-heading text-sm font-bold text-black dark:text-white uppercase tracking-wide">CategorÃ­as</h2>
                 <button onClick={() => setShowSidebar(false)} className="p-1 text-neutral-400 dark:text-gray-500 hover:text-black dark:hover:text-white transition-colors" aria-label="Cerrar categorÃ­as">
