@@ -1,6 +1,6 @@
 import { AlertTriangle, X } from 'lucide-react'
 
-function ConfirmModal({ title, message, confirmLabel, cancelLabel, onConfirm, onCancel, type = 'warning' }) {
+function ConfirmModal({ title, message, confirmLabel, cancelLabel, onConfirm, onCancel, type = 'warning', children }) {
   const confirmColor = type === 'danger' ? 'bg-red-600 hover:bg-red-700' : 'bg-primary-500 hover:bg-primary-600'
 
   return (
@@ -20,6 +20,7 @@ function ConfirmModal({ title, message, confirmLabel, cancelLabel, onConfirm, on
           <p className="text-sm text-neutral-500 dark:text-gray-400 mb-6">
             {message || '¿Estás seguro?'}
           </p>
+          {children}
           <div className="flex gap-3 w-full">
             <button
               onClick={onCancel}

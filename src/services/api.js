@@ -348,6 +348,16 @@ export const settingsApi = {
   },
 };
 
+export const authApi = {
+  verifyPassword: async (password) => {
+    const res = await request('/auth/verify-password', {
+      method: 'POST',
+      body: JSON.stringify({ password }),
+    });
+    return res;
+  },
+};
+
 export const brandsApi = {
   getAll: async (params = {}) => {
     const query = new URLSearchParams();

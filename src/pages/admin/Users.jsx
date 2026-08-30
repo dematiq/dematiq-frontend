@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
-import { X, ToggleLeft, ToggleRight } from 'lucide-react'
-import { usersApi } from '../../services/api'
+import { X, ToggleLeft, ToggleRight, Lock } from 'lucide-react'
+import { usersApi, authApi } from '../../services/api'
 import { useToast } from '../../contexts/ToastContext'
 import ConfirmModal from '../../components/ui/ConfirmModal'
 
@@ -90,6 +90,7 @@ function Users() {
   const [users, setUsers] = useState([])
   const [editUser, setEditUser] = useState(null)
   const [confirm, setConfirm] = useState(null)
+  const [password, setPassword] = useState('')
   const [loading, setLoading] = useState(true)
 
   const load = () => {
@@ -104,9 +105,12 @@ function Users() {
 
   const handleToggleStatus = (user) => {
     const isActive = user.status === 'active'
+    const isAdmin = user.role_raw === 'admin'
+    setPassword('')
     setConfirm({
       user,
-      title: isActive ? 'Deshabilitar usuario' : 'Activar usuario',
+      requiresPassword: isAdmin,
+      title: isActive ? (isAdmin ? 'Deshabilitar administrador' : 'Deshabilitar usuario') : (isAdmin ? 'Activar administrador' : 'Activar usuario'),
       message: isActive
         ? `¿Estás seguro de deshabilitar a "${user.name}"?`
         : `¿Estás seguro de activar a "${user.name}"?`,
@@ -117,8 +121,22 @@ function Users() {
 
   const confirmToggle = async () => {
     if (!confirm) return
-    const { user } = confirm
+    const { user, requiresPassword } = confirm
     const isActive = user.status === 'active'
+
+    if (requiresPassword) {
+      if (!password) {
+        toast.error('Ingresa tu contraseña para continuar')
+        return
+      }
+      try {
+        await authApi.verifyPassword(password)
+      } catch (err) {
+        toast.error(err.message)
+        return
+      }
+    }
+
     setConfirm(null)
     try {
       if (isActive) {
@@ -207,7 +225,26 @@ function Users() {
           type={confirm.type}
           onConfirm={confirmToggle}
           onCancel={() => setConfirm(null)}
-        />
+        >
+          {confirm.requiresPassword && (
+            <div className="w-full mb-5">
+              <label htmlFor="confirm-password" className="block text-sm font-medium text-neutral-700 dark:text-gray-300 mb-1.5">
+                <span className="inline-flex items-center gap-1.5">
+                  <Lock className="w-3.5 h-3.5" />
+                  Tu contraseña
+                </span>
+              </label>
+              <input
+                id="confirm-password"
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="Ingresa tu contraseña para confirmar"
+                className="w-full px-3 py-2.5 border border-neutral-200 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500/20 focus:border-red-500 transition-colors bg-transparent dark:text-gray-200 text-sm"
+              />
+            </div>
+          )}
+        </ConfirmModal>
       )}
     </div>
   )
