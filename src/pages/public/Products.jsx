@@ -329,9 +329,9 @@ function Products() {
         {showSidebar && (
           <div className="fixed inset-0 z-50 md:hidden">
             <div className="fixed inset-0 bg-black/50 dark:bg-black/70" onClick={() => setShowSidebar(false)} />
-            <div className="fixed inset-y-0 left-0 w-52 bg-white dark:bg-gray-800 shadow-2xl flex flex-col">
+            <div className="fixed inset-y-0 left-0 w-72 sm:w-80 bg-white dark:bg-gray-800 shadow-2xl flex flex-col">
               <div className="flex items-center justify-between px-5 py-4 border-b border-neutral-100 dark:border-gray-700 flex-shrink-0">
-                <h2 className="font-heading text-sm font-bold text-black dark:text-white uppercase tracking-wide">Categorias</h2>
+                <h2 className="font-heading text-base font-bold text-black dark:text-white uppercase tracking-wide">Categorias</h2>
                 <button onClick={() => setShowSidebar(false)} className="p-1 text-neutral-400 dark:text-gray-500 hover:text-black dark:hover:text-white transition-colors" aria-label="Cerrar categor­as">
                   <X className="w-5 h-5" />
                 </button>
