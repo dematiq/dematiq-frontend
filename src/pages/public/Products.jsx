@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo, useRef } from 'react'
+﻿import { useState, useEffect, useMemo, useRef } from 'react'
 import { Link, useSearchParams, useNavigate } from 'react-router-dom'
 import { useCart } from '../../contexts/CartContext'
 import { useQuote } from '../../contexts/QuoteContext'
@@ -273,7 +273,7 @@ function Products() {
           <img src={logoUrl} alt="Dematiq" className="h-20 md:h-28" />
           <p className="text-neutral-400 dark:text-gray-500 text-sm mt-2">
             {filtered.length} productos encontrados
-            {selectedBrand && <span className="text-primary-500 dark:text-primary-300"> — {selectedBrand.name}</span>}
+            {selectedBrand && <span className="text-primary-500 dark:text-primary-300"> â€” {selectedBrand.name}</span>}
           </p>
         </div>
 
@@ -283,7 +283,7 @@ function Products() {
             className="md:hidden flex items-center gap-2 px-4 py-2 text-sm border border-neutral-200 dark:border-gray-600 rounded-lg text-neutral-600 dark:text-gray-300 hover:bg-neutral-50 dark:hover:bg-gray-800 transition-colors"
           >
             <Menu className="w-4 h-4" />
-            Categorías
+            CategorÃ­as
           </button>
 
           <div className="relative flex-1">
@@ -313,8 +313,8 @@ function Products() {
         />
       )}
 
-      <div className="flex gap-6">
-        <div className="hidden md:block w-56 flex-shrink-0">
+      <div className="flex gap-5">
+        <div className="hidden md:block w-48 flex-shrink-0">
           <div className="sticky top-24">
             <CategorySidebar
               selectedCategory={selectedCategory}
@@ -329,10 +329,10 @@ function Products() {
         {showSidebar && (
           <div className="fixed inset-0 z-50 md:hidden">
             <div className="fixed inset-0 bg-black/50 dark:bg-black/70" onClick={() => setShowSidebar(false)} />
-            <div className="fixed inset-y-0 left-0 w-60 bg-white dark:bg-gray-800 shadow-2xl flex flex-col">
+            <div className="fixed inset-y-0 left-0 w-56 bg-white dark:bg-gray-800 shadow-2xl flex flex-col">
               <div className="flex items-center justify-between px-5 py-4 border-b border-neutral-100 dark:border-gray-700 flex-shrink-0">
-                <h2 className="font-heading text-sm font-bold text-black dark:text-white uppercase tracking-wide">Categorías</h2>
-                <button onClick={() => setShowSidebar(false)} className="p-1 text-neutral-400 dark:text-gray-500 hover:text-black dark:hover:text-white transition-colors" aria-label="Cerrar categorías">
+                <h2 className="font-heading text-sm font-bold text-black dark:text-white uppercase tracking-wide">CategorÃ­as</h2>
+                <button onClick={() => setShowSidebar(false)} className="p-1 text-neutral-400 dark:text-gray-500 hover:text-black dark:hover:text-white transition-colors" aria-label="Cerrar categorÃ­as">
                   <X className="w-5 h-5" />
                 </button>
               </div>
@@ -355,7 +355,7 @@ function Products() {
 
         <div className="flex-1 min-w-0">
           {loading ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
               {[...Array(8)].map((_, i) => (
                 <div key={i} className="bg-neutral-50 dark:bg-gray-800 rounded-xl overflow-hidden animate-pulse">
                   <div className="h-48 bg-neutral-200 dark:bg-gray-700" />
@@ -369,7 +369,7 @@ function Products() {
               ))}
             </div>
           ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
               {filtered.map((product) => (
                 <Link
                   key={product.id}
@@ -466,7 +466,7 @@ function Products() {
                 <Search className="w-6 h-6 text-neutral-300 dark:text-gray-600" />
               </div>
               <p className="text-neutral-500 dark:text-gray-400 font-medium">No encontramos productos</p>
-              <p className="text-neutral-400 dark:text-gray-500 text-sm mt-1">Intenta con otros filtros o búsqueda</p>
+              <p className="text-neutral-400 dark:text-gray-500 text-sm mt-1">Intenta con otros filtros o bÃºsqueda</p>
             </div>
           )}
         </div>
