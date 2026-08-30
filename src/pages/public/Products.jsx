@@ -273,7 +273,7 @@ function Products() {
           <img src={logoUrl} alt="Dematiq" className="h-20 md:h-28" />
           <p className="text-neutral-400 dark:text-gray-500 text-sm mt-2">
             {filtered.length} productos encontrados
-            {selectedBrand && <span className="text-primary-500 dark:text-primary-300"> â€” {selectedBrand.name}</span>}
+            {selectedBrand && <span className="text-primary-500 dark:text-primary-300"> — {selectedBrand.name}</span>}
           </p>
         </div>
 
@@ -283,7 +283,7 @@ function Products() {
             className="md:hidden flex items-center gap-2 px-4 py-2 text-sm border border-neutral-200 dark:border-gray-600 rounded-lg text-neutral-600 dark:text-gray-300 hover:bg-neutral-50 dark:hover:bg-gray-800 transition-colors"
           >
             <Menu className="w-4 h-4" />
-            CategorÃ­as
+            Categorias
           </button>
 
           <div className="relative flex-1">
@@ -331,8 +331,8 @@ function Products() {
             <div className="fixed inset-0 bg-black/50 dark:bg-black/70" onClick={() => setShowSidebar(false)} />
             <div className="fixed inset-y-0 left-0 w-52 bg-white dark:bg-gray-800 shadow-2xl flex flex-col">
               <div className="flex items-center justify-between px-5 py-4 border-b border-neutral-100 dark:border-gray-700 flex-shrink-0">
-                <h2 className="font-heading text-sm font-bold text-black dark:text-white uppercase tracking-wide">CategorÃ­as</h2>
-                <button onClick={() => setShowSidebar(false)} className="p-1 text-neutral-400 dark:text-gray-500 hover:text-black dark:hover:text-white transition-colors" aria-label="Cerrar categorÃ­as">
+                <h2 className="font-heading text-sm font-bold text-black dark:text-white uppercase tracking-wide">Categorias</h2>
+                <button onClick={() => setShowSidebar(false)} className="p-1 text-neutral-400 dark:text-gray-500 hover:text-black dark:hover:text-white transition-colors" aria-label="Cerrar categor­as">
                   <X className="w-5 h-5" />
                 </button>
               </div>
@@ -466,7 +466,7 @@ function Products() {
                 <Search className="w-6 h-6 text-neutral-300 dark:text-gray-600" />
               </div>
               <p className="text-neutral-500 dark:text-gray-400 font-medium">No encontramos productos</p>
-              <p className="text-neutral-400 dark:text-gray-500 text-sm mt-1">Intenta con otros filtros o bÃºsqueda</p>
+              <p className="text-neutral-400 dark:text-gray-500 text-sm mt-1">Intenta con otros filtros o bºsqueda</p>
             </div>
           )}
         </div>

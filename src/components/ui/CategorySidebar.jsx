@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from 'react'
+﻿import { useState, useEffect, useMemo } from 'react'
 import { Search, ChevronDown } from 'lucide-react'
 import { categoriesApi } from '../../services/api'
 
@@ -41,7 +41,7 @@ function CategorySidebar({ selectedCategory, onSelectCategory, brandsByCategory 
   return (
     <aside className="bg-white dark:bg-gray-800 rounded-2xl border border-neutral-100 dark:border-gray-700 overflow-hidden flex flex-col">
       <div className="px-5 py-4 border-b border-neutral-100 dark:border-gray-700 space-y-3">
-        <h2 className="font-heading text-sm font-bold text-black dark:text-white uppercase tracking-wide">Categorías</h2>
+        <h2 className="font-heading text-sm font-bold text-black dark:text-white uppercase tracking-wide">Categorias</h2>
         <div className="relative">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-neutral-300 dark:text-gray-600 pointer-events-none" />
           <input
@@ -76,7 +76,7 @@ function CategorySidebar({ selectedCategory, onSelectCategory, brandsByCategory 
 
         {!loading && filteredCategories.length === 0 && (
           <p className="text-xs text-neutral-400 dark:text-gray-500 text-center py-6">
-            {search ? 'No se encontraron categorías' : 'No hay categorías disponibles'}
+            {search ? 'No se encontraron Categorias' : 'No hay Categorias disponibles'}
           </p>
         )}
 
@@ -117,7 +117,7 @@ function CategorySidebar({ selectedCategory, onSelectCategory, brandsByCategory 
                     {hasSubcategories && (
                       <button
                         onClick={() => toggleExpand(expandKey)}
-                        aria-label={isExpanded ? 'Colapsar subcategorías' : 'Expandir subcategorías'}
+                        aria-label={isExpanded ? 'Colapsar subCategorias' : 'Expandir subCategorias'}
                         aria-expanded={isExpanded}
                         className={`flex-shrink-0 p-2 rounded-lg transition-colors ${
                           isActive || hasSubcategorySelected
