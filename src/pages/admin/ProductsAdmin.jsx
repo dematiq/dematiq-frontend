@@ -3,6 +3,7 @@ import { Plus, X, Search, ToggleLeft, ToggleRight, Upload as UploadIcon, Trash2,
 import { productsApi, categoriesApi, brandsApi, uploadImage } from '../../services/api'
 import { useToast } from '../../contexts/ToastContext'
 import ConfirmModal from '../../components/ui/ConfirmModal'
+import { useImageValidator } from '../../hooks/useImageValidator'
 
 const statusLabels = { active: 'Activo', inactive: 'Inactivo' }
 
@@ -29,7 +30,7 @@ function ProductModal({ product, categories, brands, onClose, onSave }) {
     price: product?.price?.toString() || '',
     stock: product?.stock?.toString() || '0',
     description: product?.description || '',
-    image_url: product?.image_url || '',
+    images: Array.isArray(product?.images) ? [...product.images] : (product?.image_url ? [product.image_url] : []),
     tech_sheet_url: product?.tech_sheet_url || '',
     specs: product?.specs ? JSON.stringify(product.specs, null, 2) : '[]',
     featuresList: Array.isArray(product?.specs) ? [...product.specs] : [],
@@ -37,12 +38,21 @@ function ProductModal({ product, categories, brands, onClose, onSave }) {
     price_on_request: product?.price_on_request || false,
   })
   const [step, setStep] = useState(0)
-  const [pendingFile, setPendingFile] = useState(null)
-  const [preview, setPreview] = useState(product?.image_url || '')
-  const [previewError, setPreviewError] = useState(false)
+  const [pendingFiles, setPendingFiles] = useState([null, null, null])
+  const [previewErrors, setPreviewErrors] = useState([false, false, false])
   const [previewOpen, setPreviewOpen] = useState(false)
+  const [previewOpenIdx, setPreviewOpenIdx] = useState(0)
   const [saving, setSaving] = useState(false)
-  const fileInputRef = useRef(null)
+  const fileInputRefs = [useRef(null), useRef(null), useRef(null)]
+  const { validateAndResize } = useImageValidator()
+
+  const initPreview = () => {
+    const imgs = Array.isArray(form.images) ? form.images : []
+    const arr = ['', '', '']
+    for (let i = 0; i < 3 && i < imgs.length; i++) arr[i] = imgs[i] || ''
+    return arr
+  }
+  const [previewList, setPreviewList] = useState(() => initPreview())
 
   const steps = [
     { label: 'Información básica', icon: '1' },
@@ -50,31 +60,60 @@ function ProductModal({ product, categories, brands, onClose, onSave }) {
     { label: 'Precio y stock', icon: '3' },
   ]
 
-  const handleFileSelect = (e) => {
+  const handleFileSelect = async (e, slot) => {
+    if (slot >= 3) return
     const file = e.target.files?.[0]
     if (!file) return
-    setPendingFile(file)
-    setPreviewError(false)
-    setPreview(URL.createObjectURL(file))
+    try {
+      const result = await validateAndResize(file)
+      if (!result) return
+      if (previewList[slot]) URL.revokeObjectURL(previewList[slot])
+      const newPending = [...pendingFiles]
+      newPending[slot] = result.file
+      setPendingFiles(newPending)
+      const newPreviews = [...previewList]
+      newPreviews[slot] = result.preview
+      setPreviewList(newPreviews)
+      const newErrors = [...previewErrors]
+      newErrors[slot] = false
+      setPreviewErrors(newErrors)
+    } catch (err) {
+      toast.error(err.message)
+    }
   }
 
-  const clearImage = () => {
-    if (preview && !form.image_url) URL.revokeObjectURL(preview)
-    setPendingFile(null)
-    setPreview('')
-    setPreviewError(false)
-    setForm((prev) => ({ ...prev, image_url: '' }))
-    if (fileInputRef.current) fileInputRef.current.value = ''
+  const clearImageSlot = (slot) => {
+    if (previewList[slot] && !form.images[slot]) URL.revokeObjectURL(previewList[slot])
+    const newPending = [...pendingFiles]
+    newPending[slot] = null
+    setPendingFiles(newPending)
+    const newPreviews = [...previewList]
+    newPreviews[slot] = ''
+    setPreviewList(newPreviews)
+    const newErrors = [...previewErrors]
+    newErrors[slot] = false
+    setPreviewErrors(newErrors)
+    const newImages = [...form.images]
+    newImages[slot] = ''
+    setForm({ ...form, images: newImages })
+    if (fileInputRefs[slot].current) fileInputRefs[slot].current.value = ''
   }
 
   const handleSubmit = async () => {
     setSaving(true)
     try {
-      let imageUrl = form.image_url
-      if (pendingFile) {
-        imageUrl = await uploadImage(pendingFile)
+      const images = [...form.images]
+      for (let i = 0; i < 3; i++) {
+        if (pendingFiles[i]) {
+          images[i] = await uploadImage(pendingFiles[i])
+        } else if (!images[i]) {
+          images[i] = ''
+        }
       }
-      if (preview && !form.image_url) URL.revokeObjectURL(preview)
+      const cleanedImages = images.map((u) => u || '').filter(Boolean)
+      for (let i = 0; i < previewList.length; i++) {
+        if (previewList[i] && !form.images[i]) URL.revokeObjectURL(previewList[i])
+      }
 
       const specs = form.featuresList.filter(Boolean)
       const payload = {
@@ -85,7 +124,8 @@ function ProductModal({ product, categories, brands, onClose, onSave }) {
         price: form.price_on_request ? 0 : parseFloat(form.price) * 1.16,
         stock: parseInt(form.stock, 10),
         description: form.description,
-        image_url: imageUrl || null,
+        images: cleanedImages,
+        image_url: cleanedImages[0] || null,
         tech_sheet_url: form.tech_sheet_url,
         specs,
         status: form.status,
@@ -176,45 +216,55 @@ function ProductModal({ product, categories, brands, onClose, onSave }) {
                 <textarea name="description" rows={2} value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} className="w-full px-3 py-2.5 border border-neutral-200 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-black dark:focus:ring-white resize-none bg-transparent dark:text-gray-200" />
               </div>
               <div className="col-span-2">
-                <label className="block text-sm font-medium text-neutral-700 dark:text-gray-300 mb-1">Imagen</label>
-                <div className="flex items-center gap-3">
-                  <label className="flex-1 flex items-center gap-2 px-4 py-2.5 border border-dashed border-neutral-200 dark:border-gray-600 rounded-lg text-sm text-neutral-400 dark:text-gray-500 hover:text-neutral-600 dark:hover:text-gray-300 hover:border-neutral-300 dark:hover:border-gray-500 cursor-pointer transition-colors">
-                    <UploadIcon className="w-4 h-4" />
-                    {preview ? 'Cambiar imagen' : 'Subir imagen'}
-                    <input ref={fileInputRef} type="file" accept="image/*" onChange={handleFileSelect} className="hidden" />
-                  </label>
-                  {pendingFile && <span className="text-xs text-neutral-400 dark:text-gray-500">(sin guardar)</span>}
-                  {preview && (
-                    <button type="button" onClick={clearImage} className="p-2 text-neutral-300 dark:text-gray-600 hover:text-red-500 transition-colors" aria-label="Eliminar imagen">
-                      <Trash2 className="w-4 h-4" />
-                    </button>
-                  )}
-                </div>
-                {preview ? (
-                  <div className="mt-3 relative w-full h-48 rounded-lg overflow-hidden border border-neutral-200 dark:border-gray-600 cursor-pointer bg-neutral-100 dark:bg-gray-700" onClick={() => setPreviewOpen(true)}>
-                    {!previewError ? (
-                      <img src={preview} alt="Vista previa" onError={() => setPreviewError(true)} className="w-full h-full object-contain" />
-                    ) : (
-                      <div className="flex flex-col items-center justify-center h-full text-neutral-400 dark:text-gray-500 gap-2">
-                        <UploadIcon className="w-8 h-8" />
-                        <span className="text-sm">No se pudo cargar la vista previa</span>
-                      </div>
-                    )}
-                    <div className="absolute bottom-0 inset-x-0 bg-gradient-to-t from-black/60 to-transparent px-3 py-2">
-                      <span className="text-xs text-white font-medium truncate block">{pendingFile ? pendingFile.name : 'Imagen actual'}</span>
+                <label className="block text-sm font-medium text-neutral-700 dark:text-gray-300 mb-1">Imágenes (hasta 3)</label>
+                <div className="grid grid-cols-3 gap-3">
+                  {[0, 1, 2].map((slot) => (
+                    <div key={slot} className="relative">
+                      {previewList[slot] ? (
+                        <button
+                          type="button"
+                          onClick={() => { setPreviewOpenIdx(slot); setPreviewOpen(true) }}
+                          className="w-full aspect-square rounded-lg overflow-hidden border border-neutral-200 dark:border-gray-600 cursor-pointer bg-neutral-100 dark:bg-gray-700 relative group"
+                        >
+                          {!previewErrors[slot] ? (
+                            <img src={previewList[slot]} alt={`Imagen ${slot + 1}`} onError={() => {
+                              const newErrors = [...previewErrors]
+                              newErrors[slot] = true
+                              setPreviewErrors(newErrors)
+                            }} className="w-full h-full object-cover" />
+                          ) : (
+                            <div className="flex flex-col items-center justify-center h-full text-neutral-400 dark:text-gray-500 gap-1">
+                              <UploadIcon className="w-6 h-6" />
+                              <span className="text-[10px]">No cargó</span>
+                            </div>
+                          )}
+                          <button
+                            type="button"
+                            onClick={(ev) => { ev.stopPropagation(); clearImageSlot(slot) }}
+                            className="absolute top-1 right-1 p-1 bg-black/50 rounded-full text-white hover:bg-red-600 transition-colors"
+                            aria-label={`Eliminar imagen ${slot + 1}`}
+                          >
+                            <Trash2 className="w-3.5 h-3.5" />
+                          </button>
+                        </button>
+                      ) : (
+                        <label className="w-full aspect-square rounded-lg border-2 border-dashed border-neutral-200 dark:border-gray-600 flex flex-col items-center justify-center gap-1 text-neutral-300 dark:text-gray-600 hover:border-neutral-300 dark:hover:border-gray-500 hover:text-neutral-400 cursor-pointer transition-colors">
+                          <UploadIcon className="w-6 h-6" />
+                          <span className="text-[10px]">Imagen {slot + 1}</span>
+                          <input ref={fileInputRefs[slot]} type="file" accept="image/*" onChange={(e) => handleFileSelect(e, slot)} className="hidden" />
+                        </label>
+                      )}
                     </div>
-                  </div>
-                ) : (
-                  <div className="mt-3 w-full h-48 rounded-lg border-2 border-dashed border-neutral-200 dark:border-gray-600 flex flex-col items-center justify-center gap-2 text-neutral-300 dark:text-gray-600">
-                    <UploadIcon className="w-10 h-10" />
-                    <span className="text-sm">Selecciona una imagen</span>
-                  </div>
-                )}
+                  ))}
+                </div>
+                <p className="text-xs text-neutral-400 dark:text-gray-500 mt-2">La primera imagen es la principal. Formatos JPG, PNG o WebP (máx ~500KB, se comprime automáticamente).</p>
                 {previewOpen && (
                   <div className="fixed inset-0 z-50 flex items-center justify-center p-4" onClick={() => setPreviewOpen(false)}>
                     <div className="fixed inset-0 bg-black/70" />
-                    <div className="relative max-w-2xl max-h-[90vh] rounded-2xl overflow-hidden shadow-2xl">
-                      <img src={preview} alt="" className="w-full h-full object-contain" />
+                    <div className={`relative rounded-2xl overflow-hidden shadow-2xl ${previewList[previewOpenIdx] ? 'max-w-2xl' : ''}`}>
+                      {previewList[previewOpenIdx] && (
+                        <img src={previewList[previewOpenIdx]} alt="" className="w-full h-full object-contain" />
+                      )}
                       <button type="button" onClick={() => setPreviewOpen(false)} className="absolute top-2 right-2 p-1.5 bg-black/50 rounded-full text-white hover:bg-black/70 transition-colors">
                         <X className="w-5 h-5" />
                       </button>

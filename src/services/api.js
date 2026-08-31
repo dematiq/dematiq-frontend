@@ -56,6 +56,7 @@ function mapProduct(p) {
     category_id: p.category_id,
     image: p.image_url || `/img/products/${p.slug || p.name.toLowerCase().replace(/\s+/g, '-')}.jpg`,
     image_url: p.image_url,
+    images: Array.isArray(p.images) ? p.images : (p.image_url ? [p.image_url] : []),
     description: p.description || '',
     stock: p.stock ?? 0,
     specs: p.specs || {},
