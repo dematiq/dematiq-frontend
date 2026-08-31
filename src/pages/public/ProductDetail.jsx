@@ -16,8 +16,10 @@ function ProductDetail() {
   const [addedQuote, setAddedQuote] = useState(false)
   const [product, setProduct] = useState(null)
   const [loading, setLoading] = useState(true)
+  const [activeImage, setActiveImage] = useState(0)
 
   useEffect(() => {
+    setActiveImage(0)
     productsApi.getById(id)
       .then(setProduct)
       .catch(console.error)
@@ -53,6 +55,10 @@ function ProductDetail() {
     setTimeout(() => setAddedQuote(false), 2000)
   }
 
+  const productImages = Array.isArray(product.images) && product.images.length > 0
+    ? product.images
+    : [product.image]
+
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <nav className="flex mb-8 text-sm text-neutral-400 dark:text-gray-500">
@@ -66,12 +72,32 @@ function ProductDetail() {
       </nav>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
-        <div className="bg-neutral-100 dark:bg-gray-800 rounded-2xl h-96 flex items-center justify-center overflow-hidden">
-          <img
-            src={product.image}
-            alt={product.name}
-            className="w-full h-full object-cover"
-          />
+        <div>
+          <div className="bg-neutral-100 dark:bg-gray-800 rounded-2xl aspect-square flex items-center justify-center overflow-hidden mb-3">
+            <img
+              src={productImages[activeImage] || product.image}
+              alt={product.name}
+              className="w-full h-full object-cover"
+            />
+          </div>
+          {productImages.length > 1 && (
+            <div className="flex items-center gap-2">
+              {productImages.map((img, i) => (
+                <button
+                  key={i}
+                  type="button"
+                  onClick={() => setActiveImage(i)}
+                  className={`w-16 h-16 rounded-lg overflow-hidden border-2 transition-colors bg-neutral-100 dark:bg-gray-800 ${
+                    i === activeImage
+                      ? 'border-primary-500'
+                      : 'border-neutral-200 dark:border-gray-600 hover:border-neutral-300 dark:hover:border-gray-500'
+                  }`}
+                >
+                  <img src={img} alt={`${product.name} ${i + 1}`} className="w-full h-full object-cover" />
+                </button>
+              ))}
+            </div>
+          )}
         </div>
 
         <div>
