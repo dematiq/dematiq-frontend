@@ -54,7 +54,7 @@ function CategorySidebar({ selectedCategory, onSelectCategory, brandsByCategory 
         </div>
       </div>
 
-      <div className="overflow-y-auto p-3" style={{ maxHeight: 'calc(100vh - 300px)' }}>
+      <div className="overflow-y-auto p-3" style={{ maxHeight: 'calc(100vh - 240px)' }}>
         <button
           onClick={handleAllClick}
           className={`w-full text-left px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ${
@@ -106,7 +106,7 @@ function CategorySidebar({ selectedCategory, onSelectCategory, brandsByCategory 
                   <div className="flex items-center min-w-0 gap-0.5">
                     <button
                       onClick={handleCategoryClick}
-                      className={`flex-1 min-w-0 text-left px-3 py-2.5 rounded-lg text-sm font-medium transition-colors truncate ${
+                      className={`flex-1 min-w-0 text-left px-3 py-2.5 rounded-lg text-sm font-medium leading-snug transition-colors break-words ${
                         isActive
                           ? 'bg-primary-500 text-white'
                           : 'text-neutral-700 dark:text-gray-300 hover:bg-neutral-50 dark:hover:bg-gray-700'
@@ -151,7 +151,7 @@ function CategorySidebar({ selectedCategory, onSelectCategory, brandsByCategory 
                                 onSelectCategory({ id: sub.id, name: sub.name, filterIds: [sub.id], isParent: false, parentId: cat.id })
                                 if (onSelectBrand) onSelectBrand(null)
                               }}
-                              className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-colors truncate ${
+                              className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-colors leading-snug break-words ${
                                 isSubActive
                                   ? 'bg-primary-500 text-white font-medium'
                                   : 'text-neutral-500 dark:text-gray-400 hover:bg-neutral-50 dark:hover:bg-gray-700 hover:text-neutral-700 dark:hover:text-gray-200'
@@ -177,7 +177,7 @@ function CategorySidebar({ selectedCategory, onSelectCategory, brandsByCategory 
                                           : 'text-neutral-400 dark:text-gray-500 hover:bg-neutral-50 dark:hover:bg-gray-700 hover:text-neutral-600 dark:hover:text-gray-300'
                                       }`}
                                     >
-                                      <span className="truncate">{brand.name}</span>
+                                      <span className="break-words">{brand.name}</span>
                                       <span className="text-[10px] opacity-60 flex-shrink-0 ml-1">{brand.count}</span>
                                     </button>
                                   )

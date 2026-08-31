@@ -314,7 +314,7 @@ function Products() {
       )}
 
       <div className="flex gap-6">
-        <div className="hidden md:block w-56 flex-shrink-0">
+        <div className="hidden md:block w-72 flex-shrink-0">
           <div className="sticky top-24">
             <CategorySidebar
               selectedCategory={selectedCategory}
