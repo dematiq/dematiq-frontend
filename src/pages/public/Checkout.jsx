@@ -307,14 +307,11 @@ function Checkout() {
                 <span>Subtotal</span>
                 <span>${totalPrice.toFixed(2)}</span>
               </div>
-              <div className="flex justify-between text-neutral-600 text-sm mb-1">
-                <span>Envío</span>
-                <span>Grátis</span>
-              </div>
               <div className="flex justify-between font-bold text-neutral-800 text-lg mt-2">
                 <span>Total</span>
                 <span>${totalPrice.toFixed(2)}</span>
               </div>
+              <p className="text-xs text-neutral-500 mt-1">Precio con IVA INCLUIDO</p>
             </div>
           </div>
 

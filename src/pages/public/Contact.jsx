@@ -95,7 +95,6 @@ function Contact() {
                             required
                             value={form.nombre}
                             onChange={handleChange}
-                            placeholder="ING. JOSE MORENO"
                             className="w-full pl-10 pr-4 py-2.5 border border-neutral-200 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 text-sm bg-transparent dark:text-gray-200"
                           />
                         </div>
@@ -112,7 +111,6 @@ function Contact() {
                             required
                             value={form.empresa}
                             onChange={handleChange}
-                            placeholder="DEMATIQ AUTOMATIZACION"
                             className="w-full pl-10 pr-4 py-2.5 border border-neutral-200 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 text-sm bg-transparent dark:text-gray-200"
                           />
                         </div>
@@ -129,7 +127,6 @@ function Contact() {
                             required
                             value={form.email}
                             onChange={handleChange}
-                            placeholder="ventas@dematiq.com.mx"
                             className="w-full pl-10 pr-4 py-2.5 border border-neutral-200 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 text-sm bg-transparent dark:text-gray-200"
                           />
                         </div>
@@ -146,7 +143,6 @@ function Contact() {
                             required
                             value={form.telefono}
                             onChange={handleChange}
-                            placeholder="442 721 4891"
                             className="w-full pl-10 pr-4 py-2.5 border border-neutral-200 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 text-sm bg-transparent dark:text-gray-200"
                           />
                         </div>

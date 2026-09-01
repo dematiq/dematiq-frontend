@@ -131,10 +131,6 @@ function Cart() {
                 <span>Subtotal ({items.reduce((s, i) => s + i.quantity, 0)} productos)</span>
                 <span className="text-neutral-800 dark:text-gray-200 font-medium">${totalPrice.toFixed(2)}</span>
               </div>
-              <div className="flex justify-between text-neutral-500 dark:text-gray-400">
-                <span>Envío</span>
-                <span className="text-green-600 font-medium">Gratis</span>
-              </div>
             </div>
 
             <div className="border-t border-neutral-100 dark:border-gray-700 mt-4 pt-4 flex justify-between items-baseline">
@@ -143,6 +139,8 @@ function Cart() {
                 ${totalPrice.toFixed(2)}
               </span>
             </div>
+
+            <p className="text-xs text-neutral-500 dark:text-gray-400 mt-2">Precio con IVA INCLUIDO</p>
 
             <Link
               to="/checkout"
