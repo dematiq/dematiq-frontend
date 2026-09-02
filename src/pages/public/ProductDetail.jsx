@@ -73,7 +73,7 @@ function ProductDetail() {
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
         <div>
-          <div className="bg-neutral-100 dark:bg-gray-800 rounded-2xl aspect-square flex items-center justify-center overflow-hidden mb-3">
+          <div className="bg-neutral-100 dark:bg-gray-800 rounded-2xl w-full max-w-md aspect-square flex items-center justify-center overflow-hidden mb-3">
             <img
               src={productImages[activeImage] || product.image}
               alt={product.name}
