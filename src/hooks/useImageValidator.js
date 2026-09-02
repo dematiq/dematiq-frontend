@@ -4,19 +4,19 @@ import { useCallback } from 'react'
  * Valida y redimensiona una imagen antes de subirla
  * @param {File} file - Archivo de imagen
  * @param {Object} options - Opciones de validación
- * @param {number} options.maxWidth - Ancho máximo en px (default: 800)
- * @param {number} options.maxHeight - Alto máximo en px (default: 800)
- * @param {number} options.maxSizeKB - Tamaño máximo en KB (default: 500)
- * @param {number} options.quality - Calidad JPEG/WebP 0-1 (default: 0.8)
+ * @param {number} options.maxWidth - Ancho máximo en px (default: 1600)
+ * @param {number} options.maxHeight - Alto máximo en px (default: 1600)
+ * @param {number} options.maxSizeKB - Tamaño máximo en KB (default: 1200)
+ * @param {number} options.quality - Calidad JPEG/WebP 0-1 (default: 0.9)
  * @returns {Promise<{file: File, preview: string}|null>} - File redimensionado + preview URL, o null si error
  */
 export function useImageValidator() {
   const validateAndResize = useCallback(async (file, options = {}) => {
     const {
-      maxWidth = 800,
-      maxHeight = 800,
-      maxSizeKB = 500,
-      quality = 0.8,
+      maxWidth = 1600,
+      maxHeight = 1600,
+      maxSizeKB = 1200,
+      quality = 0.9,
       allowedTypes = ['image/jpeg', 'image/png', 'image/webp'],
     } = options
 
